@@ -48,3 +48,36 @@ for (let p of pages) {
 
   nav.append(a);
 }
+
+// Step 4.2: add the theme dropdown to the page
+document.body.insertAdjacentHTML(
+  "afterbegin",
+  `
+  <label class="color-scheme">
+    Theme:
+    <select>
+      <option value="light dark">Automatic</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+  </label>`,
+);
+
+let select = document.querySelector(".color-scheme select");
+
+// Change the color scheme and keep the dropdown in sync
+function setColorScheme(colorScheme) {
+  document.documentElement.style.setProperty("color-scheme", colorScheme);
+  select.value = colorScheme;
+}
+
+// Step 4.5: on page load, use the saved choice if there is one
+if ("colorScheme" in localStorage) {
+  setColorScheme(localStorage.colorScheme);
+}
+
+// Step 4.4: when the user picks an option, apply it and save it
+select.addEventListener("input", function (event) {
+  setColorScheme(event.target.value);
+  localStorage.colorScheme = event.target.value;
+});
