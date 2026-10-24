@@ -160,3 +160,23 @@ section article { border-left: 3px solid var(--color-accent); padding-left: 1em;
   right: 1rem;
   font-size: 80%;
 }
+
+/* Step 3: GitHub stats in a row */
+#profile-stats dl {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  text-align: center;
+}
+
+#profile-stats dt {
+  grid-row: 1;
+  color: oklch(50% 3% 200);
+  font-size: 90%;
+}
+
+#profile-stats dd {
+  grid-row: 2;
+  margin: 0;
+  font-size: 200%;
+  font-weight: bold;
+}
