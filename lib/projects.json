@@ -1,62 +1,74 @@
 [
-    {
-        "title": "Lorem ipsum dolor sit.",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": ""
-    },
-    {
-        "title": "Iure iusto facilis repellat.",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": ""
-    },
-    {
-        "title": "Porro sed culpa inventore!",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": ""
-    },
-    {
-        "title": "Molestiae perferendis placeat provident.",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": ""
-    },
-    {
-        "title": "Provident ratione sapiente nulla!",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": ""
-    },
-    {
-        "title": "Nesciunt, quidem? Non, natus?",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": ""
-    },
-    {
-        "title": "Culpa modi debitis est?",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": ""
-    },
-    {
-        "title": "Voluptates laborum facilis eligendi.",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": ""
-    },
-    {
-        "title": "Facere quia distinctio dolores.",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": ""
-    },
-    {
-        "title": "Beatae quidem nemo esse.",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": ""
-    },
-    {
-        "title": "Inventore sit exercitationem deserunt.",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": ""
-    },
-    {
-        "title": "Sint exercitationem soluta dolore.",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": ""
-    }
+  {
+    "title": "Personal Portfolio Website",
+    "year": "2026",
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "Built my personal site from scratch with HTML, CSS, and JavaScript for DSC 106, including a JS-generated nav, dark mode, and live GitHub stats."
+  },
+  {
+    "title": "Responsive Projects Grid",
+    "year": "2026",
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "Used CSS Grid and subgrid to lay out project cards that adapt to any screen size."
+  },
+  {
+    "title": "Dark Mode Theme Switcher",
+    "year": "2026",
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "Added a light, dark, and automatic theme switcher that remembers the user's choice with localStorage."
+  },
+  {
+    "title": "San Diego Air Quality Explorer",
+    "year": "2025",
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "Analyzed five years of EPA air quality data to compare pollution levels across San Diego neighborhoods."
+  },
+  {
+    "title": "Cat Café Adoption Analysis",
+    "year": "2024",
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "Studied which factors, like age and time at the café, predicted faster cat adoptions using logistic regression."
+  },
+  {
+    "title": "Graph Algorithms Homework Set",
+    "year": "2025",
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "Implemented BFS, DFS, and shortest-path algorithms in Python for DSC 40B."
+  },
+  {
+    "title": "Campus Dining Wait Times",
+    "year": "2025",
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "Collected and visualized wait times at campus dining halls to find the best times to eat."
+  },
+  {
+    "title": "COGS 108 Group Project",
+    "year": "2024",
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "Worked with a team to clean, analyze, and present a real-world dataset in a Jupyter notebook."
+  },
+  {
+    "title": "Spotify Listening Habits",
+    "year": "2024",
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "Explored my own Spotify streaming history to find patterns in what I listen to and when."
+  },
+  {
+    "title": "Movie Ratings Dashboard",
+    "year": "2023",
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "Built a simple dashboard comparing movie ratings across genres and release years."
+  },
+  {
+    "title": "Intro Python Practice Projects",
+    "year": "2023",
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "A collection of small Python programs from my first programming class, like a quiz game and a budget tracker."
+  },
+  {
+    "title": "Weather Trends Notebook",
+    "year": "2023",
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "Plotted decades of temperature data for California cities to look for long-term trends."
+  }
 ]
