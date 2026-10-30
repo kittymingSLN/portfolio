@@ -180,3 +180,12 @@ section article { border-left: 3px solid var(--color-accent); padding-left: 1em;
   font-size: 200%;
   font-weight: bold;
 }
+
+/* Lab 5 Step 0.1: project year */
+.project-year {
+  font-family: Baskerville, serif;
+  font-variant-numeric: oldstyle-nums;
+  font-style: italic;
+  color: oklch(50% 3% 200);
+  margin-top: 0.25em;
+}

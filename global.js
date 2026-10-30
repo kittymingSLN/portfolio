@@ -100,7 +100,6 @@ export async function fetchJSON(url) {
   }
 }
 
-// Step 1.4: build one <article> per project inside a container
 export function renderProjects(projects, containerElement, headingLevel = 'h2') {
   // Stop if the container doesn't exist on this page
   if (!containerElement) return;
@@ -113,7 +112,10 @@ export function renderProjects(projects, containerElement, headingLevel = 'h2') 
     article.innerHTML = `
       <${headingLevel}>${project.title}</${headingLevel}>
       <img src="${project.image}" alt="${project.title}">
-      <p>${project.description}</p>
+      <div>
+        <p>${project.description}</p>
+        <p class="project-year">c. ${project.year}</p>
+      </div>
     `;
     containerElement.appendChild(article);
   }
