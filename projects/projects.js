@@ -19,6 +19,9 @@ title.textContent = `${projects.length} Projects`;
 // One color per year (same year = same color, even after filtering)
 let colors = d3.scaleOrdinal(d3.schemeTableau10);
 
+// Step 5.2: which slice is selected (-1 means none)
+let selectedIndex = -1;
+
 // Step 4.4: draw the pie chart + legend for whatever projects we give it
 function renderPieChart(projectsGiven) {
   // Count how many projects there are in each year
@@ -45,9 +48,35 @@ function renderPieChart(projectsGiven) {
   let legend = d3.select('.legend');
   legend.selectAll('li').remove();
 
-  // Draw one <path> per slice
-  arcs.forEach((arc, idx) => {
-    svg.append('path').attr('d', arc).attr('fill', colors(data[idx].label));
+  // Draw one <path> per slice, and make each one clickable
+  arcs.forEach((arc, i) => {
+    svg
+      .append('path')
+      .attr('d', arc)
+      .attr('fill', colors(data[i].label))
+      .on('click', () => {
+        // Step 5.2: click once to select, click again to deselect
+        selectedIndex = selectedIndex === i ? -1 : i;
+
+        // Highlight the selected slice and its legend row
+        svg
+          .selectAll('path')
+          .attr('class', (_, idx) => (idx === selectedIndex ? 'selected' : ''));
+        legend
+          .selectAll('li')
+          .attr('class', (_, idx) =>
+            idx === selectedIndex ? 'legend-item selected' : 'legend-item',
+          );
+
+        // Step 5.3: show only that year's projects (or all if none selected)
+        if (selectedIndex === -1) {
+          renderProjects(projects, projectsContainer, 'h2');
+        } else {
+          let selectedYear = data[selectedIndex].label;
+          let yearProjects = projects.filter((p) => p.year === selectedYear);
+          renderProjects(yearProjects, projectsContainer, 'h2');
+        }
+      });
   });
 
   // Build the legend, one <li> per slice

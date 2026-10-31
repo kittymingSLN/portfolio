@@ -243,3 +243,31 @@ section article { border-left: 3px solid var(--color-accent); padding-left: 1em;
   border: 1px solid oklch(50% 10% 200 / 40%);
   border-radius: 0.5em;
 }
+
+
+/* Lab 5 Step 5.1: fade the other slices when hovering one */
+#projects-pie-plot:has(path:hover) path:not(:hover) {
+  opacity: 0.5;
+}
+
+#projects-pie-plot path {
+  transition: 300ms;
+  cursor: pointer;
+}
+
+/* Lab 5 Step 5.2: the selected slice + legend row */
+.selected {
+  --color: oklch(45% 20% 300) !important;
+}
+
+path.selected {
+  fill: var(--color);
+}
+
+.legend-item {
+  cursor: pointer;
+}
+
+.legend-item.selected {
+  font-weight: bold;
+}
