@@ -189,3 +189,47 @@ section article { border-left: 3px solid var(--color-accent); padding-left: 1em;
   color: oklch(50% 3% 200);
   margin-top: 0.25em;
 }
+
+/* Lab 5 Step 1: pie chart size */
+#projects-pie-plot {
+  flex: 0 0 15em;
+  max-width: 15em;
+  margin-block: 2em;
+  overflow: visible;
+}
+
+/* Lab 5 Step 2.3: pie and legend side by side */
+.container {
+  display: flex;
+  align-items: center;
+  gap: 2em;
+}
+
+/* Lab 5 Step 2.2: legend box */
+.legend {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
+  gap: 1em;
+  list-style: none;
+  margin: 0;
+  padding: 1em;
+  border: 1px solid oklch(50% 10% 200 / 40%);
+  border-radius: 0.5em;
+}
+
+/* one legend row: swatch + text */
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+/* the colored dot */
+.swatch {
+  display: inline-block;
+  width: 1em;
+  aspect-ratio: 1 / 1;
+  background-color: var(--color);
+  border-radius: 50%;
+}
