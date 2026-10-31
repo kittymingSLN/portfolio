@@ -233,3 +233,13 @@ section article { border-left: 3px solid var(--color-accent); padding-left: 1em;
   background-color: var(--color);
   border-radius: 50%;
 }
+
+/* Lab 5 Step 4: search bar */
+.searchBar {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5em 0.75em;
+  margin-bottom: 2em;
+  border: 1px solid oklch(50% 10% 200 / 40%);
+  border-radius: 0.5em;
+}
