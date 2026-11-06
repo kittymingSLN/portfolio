@@ -308,3 +308,54 @@ path.selected {
 .gridlines .domain {
   display: none;
 }
+
+
+/* Step 3.1: tooltip layout: labels left, values right */
+dl.info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25em 1em;
+  margin: 0;
+  font-size: 90%;
+  transition-duration: 500ms;
+  transition-property: opacity, visibility;
+}
+
+dl.info dt {
+  color: oklch(50% 3% 200);
+}
+
+dl.info dd {
+  margin: 0;
+  font-weight: bold;
+}
+
+/* Step 3.3: hidden until you hover a dot */
+dl.info[hidden]:not(:hover, :focus-within) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Step 3.2: make it look like a tooltip */
+.tooltip {
+  position: fixed;
+  top: 1em;
+  left: 1em;
+  padding: 0.75em 1em;
+  background-color: color-mix(in oklch, canvas 85%, transparent);
+  backdrop-filter: blur(6px);
+  border-radius: 0.5em;
+  box-shadow: 0 4px 12px oklch(0% 0 0 / 15%);
+  pointer-events: none;
+}
+
+/* Step 3.1: dots grow smoothly from their center on hover */
+circle {
+  transition: 200ms;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+circle:hover {
+  transform: scale(1.5);
+}

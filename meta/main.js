@@ -79,6 +79,37 @@ function renderCommitInfo(data, commits) {
   dl.append('dd').text(maxPeriod.replace('in the ', ''));
 }
 
+// ---------- Step 3: tooltip helpers ----------
+
+// Fill the tooltip with one commit's info
+function renderTooltipContent(commit) {
+  if (Object.keys(commit).length === 0) return;
+
+  const link = document.getElementById('commit-link');
+  link.href = commit.url;
+  link.textContent = commit.id;
+
+  document.getElementById('commit-date').textContent =
+    commit.datetime?.toLocaleString('en', { dateStyle: 'full' });
+  document.getElementById('commit-time').textContent =
+    commit.datetime?.toLocaleString('en', { timeStyle: 'short' });
+  document.getElementById('commit-author').textContent = commit.author;
+  document.getElementById('commit-lines').textContent = commit.totalLines;
+}
+
+// Step 3.3: show or hide the tooltip
+function updateTooltipVisibility(isVisible) {
+  const tooltip = document.getElementById('commit-tooltip');
+  tooltip.hidden = !isVisible;
+}
+
+// Step 3.4: move the tooltip next to the mouse
+function updateTooltipPosition(event) {
+  const tooltip = document.getElementById('commit-tooltip');
+  tooltip.style.left = `${event.clientX + 10}px`;
+  tooltip.style.top = `${event.clientY + 10}px`;
+}
+
 // The scales live out here so later steps can use them too
 let xScale;
 let yScale;
@@ -124,19 +155,37 @@ function renderScatterPlot(data, commits) {
     .attr('transform', `translate(${usableArea.left}, 0)`)
     .call(d3.axisLeft(yScale).tickFormat('').tickSize(-usableArea.width));
 
-  // Step 2.1: one dot per commit
+  // Step 4.1 + 4.2: dot size = lines edited (sqrt so the AREA matches)
+  const [minLines, maxLines] = d3.extent(commits, (d) => d.totalLines);
+  const rScale = d3.scaleSqrt().domain([minLines, maxLines]).range([2, 30]);
+
+  // Step 4.3: draw big dots first so small dots stay on top
+  const sortedCommits = d3.sort(commits, (d) => -d.totalLines);
+
+  // The dots, with hover events
   const dots = svg.append('g').attr('class', 'dots');
   dots
     .selectAll('circle')
-    .data(commits)
+    .data(sortedCommits)
     .join('circle')
     .attr('cx', (d) => xScale(d.datetime))
     .attr('cy', (d) => yScale(d.hourFrac))
-    .attr('r', 5)
-    .attr('fill', 'steelblue');
+    .attr('r', (d) => rScale(d.totalLines))
+    .attr('fill', 'steelblue')
+    .style('fill-opacity', 0.7)
+    .on('mouseenter', (event, commit) => {
+      d3.select(event.currentTarget).style('fill-opacity', 1);
+      renderTooltipContent(commit);
+      updateTooltipVisibility(true);
+      updateTooltipPosition(event);
+    })
+    .on('mouseleave', (event) => {
+      d3.select(event.currentTarget).style('fill-opacity', 0.7);
+      updateTooltipVisibility(false);
+    });
 
-  // Step 2.2: axes
-  const xAxis = d3.axisBottom(xScale);
+  // Step 2.2: axes (fewer x labels so they don't overlap)
+  const xAxis = d3.axisBottom(xScale).ticks(8);
   const yAxis = d3
     .axisLeft(yScale)
     .tickFormat((d) => String(d % 24).padStart(2, '0') + ':00');
