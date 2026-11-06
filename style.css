@@ -271,3 +271,30 @@ path.selected {
 .legend-item.selected {
   font-weight: bold;
 }
+
+
+/* ---------- Lab 6 ---------- */
+
+/* Step 1.3: summary stats (same look as the GitHub stats) */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8em, 1fr));
+  grid-auto-flow: column;
+  grid-template-rows: auto auto;
+  gap: 0.25em 1em;
+  text-align: center;
+}
+
+.stats dt {
+  grid-row: 1;
+  color: oklch(50% 3% 200);
+  font-size: 80%;
+  text-transform: uppercase;
+}
+
+.stats dd {
+  grid-row: 2;
+  margin: 0;
+  font-size: 180%;
+  font-weight: bold;
+}
