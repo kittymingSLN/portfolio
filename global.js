@@ -4,12 +4,12 @@ function $$(selector, context = document) {
   return Array.from(context.querySelectorAll(selector));
 }
 
-// Step 3.1: list of pages in the nav
 let pages = [
   { url: "", title: "Home" },
   { url: "projects/", title: "Projects" },
   { url: "resume/", title: "Resume" },
   { url: "contact/", title: "Contact" },
+  { url: "meta/", title: "Meta" },
   { url: "https://github.com/kittymingSLN", title: "GitHub" },
 ];
 
