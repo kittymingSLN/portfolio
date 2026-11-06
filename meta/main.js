@@ -76,7 +76,80 @@ function renderCommitInfo(data, commits) {
   );
   const maxPeriod = d3.greatest(workByPeriod, (d) => d[1])?.[0];
   dl.append('dt').text('Most work done');
-  dl.append('dd').text(maxPeriod);
+  dl.append('dd').text(maxPeriod.replace('in the ', ''));
+}
+
+// The scales live out here so later steps can use them too
+let xScale;
+let yScale;
+
+// ---------- Step 2: scatterplot ----------
+function renderScatterPlot(data, commits) {
+  const width = 1000;
+  const height = 600;
+
+  const svg = d3
+    .select('#chart')
+    .append('svg')
+    .attr('viewBox', `0 0 ${width} ${height}`)
+    .style('overflow', 'visible');
+
+  // Step 2.2: leave room for the axes
+  const margin = { top: 10, right: 10, bottom: 30, left: 20 };
+  const usableArea = {
+    top: margin.top,
+    right: width - margin.right,
+    bottom: height - margin.bottom,
+    left: margin.left,
+    width: width - margin.left - margin.right,
+    height: height - margin.top - margin.bottom,
+  };
+
+  // Step 2.1: scales (date -> x, hour of day -> y)
+  xScale = d3
+    .scaleTime()
+    .domain(d3.extent(commits, (d) => d.datetime))
+    .range([usableArea.left, usableArea.right])
+    .nice();
+
+  yScale = d3
+    .scaleLinear()
+    .domain([0, 24])
+    .range([usableArea.bottom, usableArea.top]);
+
+  // Step 2.3: faint horizontal grid lines (drawn first, so they sit behind)
+  svg
+    .append('g')
+    .attr('class', 'gridlines')
+    .attr('transform', `translate(${usableArea.left}, 0)`)
+    .call(d3.axisLeft(yScale).tickFormat('').tickSize(-usableArea.width));
+
+  // Step 2.1: one dot per commit
+  const dots = svg.append('g').attr('class', 'dots');
+  dots
+    .selectAll('circle')
+    .data(commits)
+    .join('circle')
+    .attr('cx', (d) => xScale(d.datetime))
+    .attr('cy', (d) => yScale(d.hourFrac))
+    .attr('r', 5)
+    .attr('fill', 'steelblue');
+
+  // Step 2.2: axes
+  const xAxis = d3.axisBottom(xScale);
+  const yAxis = d3
+    .axisLeft(yScale)
+    .tickFormat((d) => String(d % 24).padStart(2, '0') + ':00');
+
+  svg
+    .append('g')
+    .attr('transform', `translate(0, ${usableArea.bottom})`)
+    .call(xAxis);
+
+  svg
+    .append('g')
+    .attr('transform', `translate(${usableArea.left}, 0)`)
+    .call(yAxis);
 }
 
 // ---------- Run everything ----------
@@ -84,3 +157,4 @@ let data = await loadData();
 let commits = processCommits(data);
 
 renderCommitInfo(data, commits);
+renderScatterPlot(data, commits);

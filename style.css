@@ -298,3 +298,13 @@ path.selected {
   font-size: 180%;
   font-weight: bold;
 }
+
+/* Step 2.3: faint grid lines */
+.gridlines .tick line {
+  stroke: currentColor;
+  stroke-opacity: 0.15;
+}
+
+.gridlines .domain {
+  display: none;
+}
