@@ -359,3 +359,23 @@ circle {
 circle:hover {
   transform: scale(1.5);
 }
+
+/* Step 5.3: dashed "marching ants" brush box */
+@keyframes marching-ants {
+  to {
+    stroke-dashoffset: -8; /* 5 + 3 */
+  }
+}
+
+.selection {
+  fill-opacity: 0.1;
+  stroke: currentColor;
+  stroke-opacity: 0.7;
+  stroke-dasharray: 5 3;
+  animation: marching-ants 2s linear infinite;
+}
+
+/* Step 5.4: brushed dots */
+circle.selected {
+  fill: #ff6b6b;
+}
