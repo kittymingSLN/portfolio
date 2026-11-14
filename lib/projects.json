@@ -1,5 +1,12 @@
 [
   {
+    "title": "Bikewatching",
+    "year": "2026",
+    "image": "https://kittymingsln.github.io/portfolio/images/bikewatching.png",
+    "description": "An interactive Mapbox + D3 map of Bluebikes traffic in Boston and Cambridge. Station size shows traffic, color shows arrivals vs. departures, and a time slider filters by time of day.",
+    "url": "https://kittymingsln.github.io/bikewatching/"
+  },
+  {
     "title": "Personal Portfolio Website",
     "year": "2026",
     "image": "https://vis-society.github.io/labs/2/images/empty.svg",
