@@ -379,3 +379,11 @@ circle:hover {
 circle.selected {
   fill: #ff6b6b;
 }
+
+
+/* Lab 7: keep project images inside their cards */
+.projects img {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+}
