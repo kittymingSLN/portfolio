@@ -262,6 +262,51 @@ function updateScatterPlot(data, commits) {
     });
 }
 
+// ---------- Lab 8 Step 2: unit visualization (one dot per line) ----------
+
+// Step 2.4: one color per technology (css, js, html)
+let colors = d3.scaleOrdinal(d3.schemeTableau10);
+
+function updateFileDisplay(filteredCommits) {
+  // Step 2.1: get every line, then group the lines by file
+  let lines = filteredCommits.flatMap((d) => d.lines);
+  let files = d3
+    .groups(lines, (d) => d.file)
+    .map(([name, lines]) => {
+      return { name, lines };
+    })
+    // Step 2.3: biggest file first
+    .sort((a, b) => b.lines.length - a.lines.length);
+
+  // One <div> per file, each with a <dt> and a <dd>
+  let filesContainer = d3
+    .select('#files')
+    .selectAll('div')
+    .data(files, (d) => d.name)
+    .join(
+      // This code only runs when the div is first created
+      (enter) =>
+        enter.append('div').call((div) => {
+          div.append('dt');
+          div.append('dd');
+        }),
+    );
+
+  // Update the file name + line count
+  filesContainer
+    .select('dt')
+    .html((d) => `<code>${d.name}</code><small>${d.lines.length} lines</small>`);
+
+  // Step 2.2: one dot per line, colored by technology (Step 2.4)
+  filesContainer
+    .select('dd')
+    .selectAll('div')
+    .data((d) => d.lines)
+    .join('div')
+    .attr('class', 'loc')
+    .attr('style', (d) => `--color: ${colors(d.type)}`);
+}
+
 // ---------- Step 5: brushing ----------
 
 // Step 5.4: is this commit's dot inside the brush box?
@@ -372,6 +417,7 @@ function onTimeSliderChange() {
 
   updateScatterPlot(data, filteredCommits);
   renderCommitInfo(filteredData, filteredCommits);
+  updateFileDisplay(filteredCommits); // Step 2
 }
 
 slider.addEventListener('input', onTimeSliderChange);

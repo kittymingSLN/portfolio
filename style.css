@@ -416,3 +416,48 @@ circle.selected {
 #time-filter time {
   margin-left: auto;
 }
+
+
+/* Step 2.1: file list as a grid (names left, dots right) */
+#files {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+
+  > div {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  dt {
+    grid-column: 1;
+  }
+
+  /* Step 2.2: dots wrap and pack tightly */
+  dd {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    align-content: start;
+    gap: 0.15em;
+    padding-top: 0.6em;
+    margin-left: 0;
+  }
+
+  /* line count under the file name */
+  small {
+    display: block;
+    font-size: 75%;
+    opacity: 0.6;
+  }
+}
+
+/* Step 2.2 + 2.4: one dot per line, colored by technology */
+.loc {
+  display: flex;
+  width: 0.5em;
+  aspect-ratio: 1;
+  background: var(--color);
+  border-radius: 50%;
+}
