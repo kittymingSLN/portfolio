@@ -41,11 +41,14 @@ function processCommits(data) {
       });
 
       return ret;
-    });
+    })
+    .sort((a, b) => a.datetime - b.datetime); // Lab 8: oldest commit first
 }
 
 // ---------- Step 1.3: summary stats ----------
 function renderCommitInfo(data, commits) {
+  // Lab 8: clear the old stats first, so we can call this again with filtered commits
+  d3.select('#stats').html('');
   const dl = d3.select('#stats').append('dl').attr('class', 'stats');
 
   // Total lines of code
@@ -91,7 +94,7 @@ function renderTooltipContent(commit) {
 
   document.getElementById('commit-date').textContent =
     commit.datetime?.toLocaleString('en', { dateStyle: 'full' });
-  document.getElementById('commit-time').textContent =
+  document.getElementById('commit-clock').textContent =
     commit.datetime?.toLocaleString('en', { timeStyle: 'short' });
   document.getElementById('commit-author').textContent = commit.author;
   document.getElementById('commit-lines').textContent = commit.totalLines;
@@ -166,7 +169,7 @@ function renderScatterPlot(data, commits) {
   const dots = svg.append('g').attr('class', 'dots');
   dots
     .selectAll('circle')
-    .data(sortedCommits)
+    .data(sortedCommits, (d) => d.id) // Lab 8 Step 1.3: key = commit id
     .join('circle')
     .attr('cx', (d) => xScale(d.datetime))
     .attr('cy', (d) => yScale(d.hourFrac))
@@ -193,16 +196,70 @@ function renderScatterPlot(data, commits) {
   svg
     .append('g')
     .attr('transform', `translate(0, ${usableArea.bottom})`)
+    .attr('class', 'x-axis') // Lab 8 Step 1.2: mark it so we can update it
     .call(xAxis);
 
   svg
     .append('g')
     .attr('transform', `translate(${usableArea.left}, 0)`)
+    .attr('class', 'y-axis') // just for consistency
     .call(yAxis);
 
   // Step 5.1 + 5.2: brushing, with the dots raised above the brush overlay
   svg.call(d3.brush().on('start brush end', brushed));
   svg.selectAll('.dots, .overlay ~ *').raise();
+}
+
+// ---------- Lab 8 Step 1.2: update the existing scatterplot ----------
+function updateScatterPlot(data, commits) {
+  const width = 1000;
+  const height = 600;
+  const margin = { top: 10, right: 10, bottom: 30, left: 20 };
+  const usableArea = {
+    top: margin.top,
+    right: width - margin.right,
+    bottom: height - margin.bottom,
+    left: margin.left,
+    width: width - margin.left - margin.right,
+    height: height - margin.top - margin.bottom,
+  };
+
+  // Use the svg that's already there (don't make a new one)
+  const svg = d3.select('#chart').select('svg');
+
+  xScale = xScale.domain(d3.extent(commits, (d) => d.datetime));
+
+  const [minLines, maxLines] = d3.extent(commits, (d) => d.totalLines);
+  const rScale = d3.scaleSqrt().domain([minLines, maxLines]).range([2, 30]);
+
+  // Clear out the old x-axis and draw the new one
+  const xAxis = d3.axisBottom(xScale).ticks(8);
+  const xAxisGroup = svg.select('g.x-axis');
+  xAxisGroup.selectAll('*').remove();
+  xAxisGroup.call(xAxis);
+
+  const dots = svg.select('g.dots');
+
+  const sortedCommits = d3.sort(commits, (d) => -d.totalLines);
+  dots
+    .selectAll('circle')
+    .data(sortedCommits, (d) => d.id) // Step 1.3: key = commit id
+    .join('circle')
+    .attr('cx', (d) => xScale(d.datetime))
+    .attr('cy', (d) => yScale(d.hourFrac))
+    .attr('r', (d) => rScale(d.totalLines))
+    .attr('fill', 'steelblue')
+    .style('fill-opacity', 0.7)
+    .on('mouseenter', (event, commit) => {
+      d3.select(event.currentTarget).style('fill-opacity', 1);
+      renderTooltipContent(commit);
+      updateTooltipVisibility(true);
+      updateTooltipPosition(event);
+    })
+    .on('mouseleave', (event) => {
+      d3.select(event.currentTarget).style('fill-opacity', 0.7);
+      updateTooltipVisibility(false);
+    });
 }
 
 // ---------- Step 5: brushing ----------
@@ -219,7 +276,7 @@ function isCommitSelected(selection, commit) {
 // Step 5.5: "N commits selected"
 function renderSelectionCount(selection) {
   const selectedCommits = selection
-    ? commits.filter((d) => isCommitSelected(selection, d))
+    ? filteredCommits.filter((d) => isCommitSelected(selection, d))
     : [];
 
   const countElement = document.querySelector('#selection-count');
@@ -231,7 +288,7 @@ function renderSelectionCount(selection) {
 // Step 5.6: lines per language in the selected commits
 function renderLanguageBreakdown(selection) {
   const selectedCommits = selection
-    ? commits.filter((d) => isCommitSelected(selection, d))
+    ? filteredCommits.filter((d) => isCommitSelected(selection, d))
     : [];
   const container = document.getElementById('language-breakdown');
 
@@ -276,3 +333,46 @@ let commits = processCommits(data);
 
 renderCommitInfo(data, commits);
 renderScatterPlot(data, commits);
+
+// ---------- Lab 8 Step 1.1: time slider ----------
+let commitProgress = 100;
+
+let timeScale = d3
+  .scaleTime()
+  .domain([
+    d3.min(commits, (d) => d.datetime),
+    d3.max(commits, (d) => d.datetime),
+  ])
+  .range([0, 100]);
+
+let commitMaxTime = timeScale.invert(commitProgress);
+
+// Step 1.2: will get updated as the user changes the slider
+let filteredCommits = commits;
+
+const slider = document.getElementById('commit-progress');
+const selectedTime = document.getElementById('commit-time');
+
+function onTimeSliderChange() {
+  // 1. slider value -> commitProgress
+  commitProgress = Number(slider.value);
+
+  // 2. commitProgress -> date
+  commitMaxTime = timeScale.invert(commitProgress);
+
+  // 3. show the date
+  selectedTime.textContent = commitMaxTime.toLocaleString('en', {
+    dateStyle: 'long',
+    timeStyle: 'short',
+  });
+
+  // Step 1.2: only keep commits up to that date, and update the page
+  filteredCommits = commits.filter((d) => d.datetime <= commitMaxTime);
+  const filteredData = filteredCommits.flatMap((d) => d.lines);
+
+  updateScatterPlot(data, filteredCommits);
+  renderCommitInfo(filteredData, filteredCommits);
+}
+
+slider.addEventListener('input', onTimeSliderChange);
+onTimeSliderChange(); // run once on page load
