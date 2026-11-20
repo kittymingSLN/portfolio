@@ -461,3 +461,33 @@ circle.selected {
   background: var(--color);
   border-radius: 50%;
 }
+
+
+/* Step 3.1: story on the left, chart on the right */
+#scrolly-1 {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+
+  > * {
+    flex: 1;
+  }
+}
+
+#scatter-story {
+  position: relative;
+}
+
+/* the chart sticks to the top of the screen while you scroll */
+#scatter-plot {
+  position: sticky;
+  top: 0;
+  left: 0;
+  bottom: auto;
+  height: 50vh;
+}
+
+/* Step 3.2: space out each commit's paragraph */
+.step {
+  padding-bottom: 1em;
+}

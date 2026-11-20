@@ -1,4 +1,5 @@
 import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm';
+import scrollama from 'https://cdn.jsdelivr.net/npm/scrollama@3.2.0/+esm';
 
 // ---------- Step 1.1: load the CSV ----------
 async function loadData() {
@@ -405,7 +406,12 @@ function onTimeSliderChange() {
   // 2. commitProgress -> date
   commitMaxTime = timeScale.invert(commitProgress);
 
-  // 3. show the date
+  // 3. update everything for that date
+  updatePage();
+}
+
+// Shows the date and updates everything to only show commits up to commitMaxTime
+function updatePage() {
   selectedTime.textContent = commitMaxTime.toLocaleString('en', {
     dateStyle: 'long',
     timeStyle: 'short',
@@ -422,3 +428,48 @@ function onTimeSliderChange() {
 
 slider.addEventListener('input', onTimeSliderChange);
 onTimeSliderChange(); // run once on page load
+
+// ---------- Lab 8 Step 3.2: one paragraph of story per commit ----------
+d3.select('#scatter-story')
+  .selectAll('.step')
+  .data(commits)
+  .join('div')
+  .attr('class', 'step')
+  .html(
+    (d, i) => `
+      On ${d.datetime.toLocaleString('en', {
+        dateStyle: 'full',
+        timeStyle: 'short',
+      })},
+      I made <a href="${d.url}" target="_blank">${
+        i > 0 ? 'another glorious commit' : 'my first commit, and it was glorious'
+      }</a>.
+      I edited ${d.totalLines} lines across ${
+        d3.rollups(
+          d.lines,
+          (D) => D.length,
+          (d) => d.file,
+        ).length
+      } files.
+      Then I looked over all I had made, and I saw that it was very good.
+    `,
+  );
+
+// ---------- Lab 8 Step 3.3: update the chart as you scroll ----------
+function onStepEnter(response) {
+  // D3 saved each commit on its .step div, so we can grab its date
+  commitMaxTime = response.element.__data__.datetime;
+
+  // move the slider to match, then update everything
+  commitProgress = timeScale(commitMaxTime);
+  slider.value = commitProgress;
+  updatePage();
+}
+
+const scroller = scrollama();
+scroller
+  .setup({
+    container: '#scrolly-1',
+    step: '#scrolly-1 .step',
+  })
+  .onStepEnter(onStepEnter);
