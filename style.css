@@ -489,5 +489,5 @@ circle.selected {
 
 /* Step 3.2: space out each commit's paragraph */
 .step {
-  padding-bottom: 1em;
+  padding-bottom: 25vh;
 }
